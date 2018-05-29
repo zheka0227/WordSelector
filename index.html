@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Подбор слов</title>
+    <meta charset="utf-8" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <style>
+        #mainForm {
+            width: 240px; 
+            padding: 10px; 
+            margin: auto; 
+            background: #7FFFD4; 
+        }
+        .input{
+            width:100%;
+            margin: auto;
+        }
+        #btnSend{
+            width: 100%;
+            color: darkblue;
+        }
+    </style>
+</head>
+<body>
+<div id="mainForm">
+        <h1>Введите данные</h1>
+        <div class="lettersClass">
+            <label>Буквы</label></br>
+            <input type="text" id="letters" class="input" /></br>
+        </div>
+        <div class="maskClass">
+            <label>Маска</label></br>
+            <input type="text" id="mask" class="input"/></br></br>
+        </div>
+        <div class="maxLengthClass">
+            <label>Максимальная длина слова</label></br>
+            <input type="number" id="maxLength" class="input"/></br></br>
+        </div>
+        <button id="btnSend">Подобрать</button></br></br>
+        <div id="wordsDiv"></div>
+</div>
+
+<script>
+   $("#btnSend").click(function () {
+       event.preventDefault();
+       var letters = $("#letters").val();
+       var mask = $("#mask").val();
+       var maxLength = $("#maxLength").val();
+
+       var data = {
+           letters: letters,
+           mask: mask,
+           maxLength: maxLength
+       };
+
+       var body = JSON.stringify(data);
+       var xhr = new XMLHttpRequest();
+       xhr.open('POST', '/select', true);
+       xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+       xhr.send(body);
+       xhr.onreadystatechange = function() {
+           if (xhr.readyState != 4) return;
+           var resp = xhr.responseText;
+           var words = resp.split("@");
+           for(var i=0;i<words.length-1;i++){
+               var newDiv = document.createElement('div');
+               newDiv.innerHTML = words[i];
+               wordsDiv.appendChild(newDiv);
+
+           }
+           var newDiv = document.createElement('div');
+           newDiv.innerHTML = words.length;
+           wordsDiv.appendChild(newDiv);
+
+       }
+   });
+
+
+</script>
+</body>
+<html>
